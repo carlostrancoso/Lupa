@@ -176,8 +176,16 @@ const touch = {
 }
 window.addEventListener("touchmove", (event) =>
 {
-    touch.x = event.clientX / canvas.clientWidth - 0.5
-    touch.y = - (event.clientY / canvas.clientHeight - 0.5)
+	  if(event.clientX == 0 || event.clientX === undefined){
+    touch.x = 1;        
+   }
+  
+   else if(event.clientY == 0 || event.clientY === undefined){
+    touch.y = 1;        
+   } else {
+      touch.x = event.clientX / canvas.clientWidth - 0.5
+      touch.y = - (event.clientY / canvas.clientHeight - 0.5)
+	}   
 
 })
 
