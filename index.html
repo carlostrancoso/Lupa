@@ -40,11 +40,6 @@
 const manager = new THREE.LoadingManager();
   const loadingContainer = document.querySelector('.loading-screen')
 
-  manager.onLoad = function ( ) {
-
-  loadingContainer.style.display='none';
-
-};
 
 manager.onError = function ( url ) {
 
@@ -209,13 +204,9 @@ window.addEventListener("touchmove", (event) =>
 
 
     // Update camera
-    camera.position.x = Math.sin(cursor.x * Math.PI/2) * 2
-    camera.position.z = Math.cos(cursor.x * Math.PI/2) * 2
-    camera.position.y = cursor.y * 2
-	
-	camera.position.x = Math.sin(touch.x * Math.PI/2) * 2
-    camera.position.z = Math.cos(touch.x * Math.PI/2) * 2
-    camera.position.y = touch.y * 2
+    camera.position.x = Math.sin(touch.x *cursor.x * Math.PI/2) * 2
+    camera.position.z = Math.cos(touch.x *cursor.x * Math.PI/2) * 2
+    camera.position.y = touch.y * cursor.y * 2
 	
     camera.lookAt(cube.position)
     
