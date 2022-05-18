@@ -169,6 +169,11 @@ window.addEventListener('mousemove', (event) =>
 })
 
 
+// Cursor
+const touch = {
+    x: 0,
+    y: 0
+}
 window.addEventListener("touchmove", (event) =>
 {
     touch.x = event.clientX / canvas.clientWidth - 0.5
