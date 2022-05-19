@@ -13,12 +13,9 @@
           width: 100%;
           height: 100%;
           display: block;
-          cursor: grab;
+          cursor: none;
       }
-      #webgl:active {
-      cursor: grabbing;
 
-  }
   </style>
 
     <script  type="importmap">{
@@ -35,16 +32,12 @@
      import {OBJLoader} from 'https://threejs.org/examples/jsm/loaders/OBJLoader.js';
      import {MTLLoader} from 'https://threejs.org/examples/jsm/loaders/MTLLoader.js';
 
+
 //loading screen
 
 const manager = new THREE.LoadingManager();
   const loadingContainer = document.querySelector('.loading-screen')
 
-  manager.onLoad = function ( ) {
-
-  loadingContainer.style.display='none';
-
-};
 
 manager.onError = function ( url ) {
 
@@ -61,7 +54,7 @@ manager.onError = function ( url ) {
 
       //cena e fundo 
       //const bgcolor = new THREE.Color(0xEDEDED);
-      const bgcolor = new THREE.Color(0xdb4437);
+      const bgcolor = new THREE.Color('black');
       const scene = new THREE.Scene();
       scene.background = bgcolor;
 
@@ -90,8 +83,39 @@ controls.enabled = false
 
   //luz ambiente
 
-  const light = new THREE.AmbientLight( 0xffffff, 4 ); // soft white light
+  const light = new THREE.AmbientLight( 0xffffff, 2 ); // soft white light
   scene.add( light );
+
+  //luz vermelha
+  {
+    var color = 0xE7071B;
+    var intensity = 4;
+    var rlight = new THREE.DirectionalLight(color, intensity);
+    rlight.position.set(5, 50, 10);
+    scene.add(rlight);
+    scene.add(rlight.target);
+  }
+   
+    //luz azul
+  {
+    var color = 0x0000FF;
+    var intensity = 3; 
+    var blight = new THREE.DirectionalLight(color, intensity);
+    blight.position.set(10, 12, 2);
+    scene.add(blight);
+    scene.add(blight.target);
+  }
+   
+    //luz verde
+    
+  {
+    var color = 0x00FF00;
+    var intensity = 2;
+    var glight = new THREE.DirectionalLight(color, intensity);
+    glight.position.set(-10, 5, 2);
+    scene.add(glight);
+    scene.add(glight.target);
+  }
 
 
   // Object
@@ -138,14 +162,14 @@ objLoader.load('LUPA.obj', function (obj) {
     var busto;
   {
     var mtlLoader = new MTLLoader(manager);
-    mtlLoader.load('BUSTO.mtl', (mtl) => {
+    mtlLoader.load('BUSTO_2.mtl', (mtl) => {
       mtl.preload();
       for (var material of Object.values(mtl.materials)) {
      material.side = THREE.DoubleSide;
       }
       var objLoader = new OBJLoader(manager);
       objLoader.setMaterials(mtl);
-      objLoader.load('BUSTO.obj', (mesh) => {
+      objLoader.load('BUSTO_2.obj', (mesh) => {
         busto = mesh;
         scene.add(busto);
         busto.rotation.x = Math.PI;
@@ -170,15 +194,6 @@ window.addEventListener('mousemove', (event) =>
 
 
 
-
-
-
-
-
-
-
-
-
     const tick = () =>
 {
   //Update window
@@ -188,21 +203,17 @@ window.addEventListener('mousemove', (event) =>
       camera.updateProjectionMatrix();
     }
 
-
     // Update camera
-    camera.position.x = Math.sin(cursor.x * Math.PI/2) * 2
-    camera.position.z = Math.cos(cursor.x * Math.PI/2) * 2
-    camera.position.y = cursor.y * 2
+    camera.position.x = Math.sin(cursor.x * Math.PI/2) * 3
+    camera.position.z = Math.cos(cursor.x * Math.PI/2) * 3
+    camera.position.y = cursor.y * 4
     camera.lookAt(cube.position)
 
      // Update controls
      controls.update()
 
-
-
     // Render
     renderer.render(scene, camera)
-
 
 
     // Call tick again on the next frame
