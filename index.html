@@ -4,19 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa</title>
-    <style>
-      html, body {
-          margin: 0;
-          height: 100%;
-      }
-      #webgl {
-          width: 100%;
-          height: 100%;
-          display: block;
-          cursor: none;
-      }
-
-  </style>
+    <link type="text/css" rel="stylesheet" href="./main.css">
 
     <script  type="importmap">{
       "imports": {
@@ -60,13 +48,12 @@ manager.onError = function ( url ) {
 
     // Camera
     const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 100)
-    camera.position.z = 3
     scene.add(camera)
 
     // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
-controls.enabled = false
+    //const controls = new OrbitControls(camera, canvas)
+    //controls.enableDamping = true
+    //controls.enabled = true
 
     //redimensionamento da janela
 
@@ -160,6 +147,7 @@ objLoader.load('LUPA.obj', function (obj) {
     //bustos
 
     var busto;
+    const oldObjectPosition = new THREE.Vector3();
   {
     var mtlLoader = new MTLLoader(manager);
     mtlLoader.load('BUSTO_2.mtl', (mtl) => {
@@ -175,6 +163,8 @@ objLoader.load('LUPA.obj', function (obj) {
         busto.rotation.x = Math.PI;
         busto.rotation.z = Math.PI;
         busto.visible = true;
+        
+        lupa.getWorldPosition(oldObjectPosition);
       });
     });
 
@@ -185,6 +175,11 @@ const cursor = {
     x: 0,
     y: 0
 }
+
+const cursor2 = {
+    x: 0,
+    y: 0
+}
 window.addEventListener('mousemove', (event) =>
 {
     cursor.x = event.clientX / canvas.clientWidth - 0.5
@@ -192,10 +187,26 @@ window.addEventListener('mousemove', (event) =>
 
 })
 
+window.addEventListener('click', (event) =>
+{
+    cursor2.x = event.clientX / canvas.clientWidth - 0.5
+    cursor2.y = - (event.clientY / canvas.clientHeight - 0.5)
+
+})
+
 
 
     const tick = () =>
 {
+
+  const cameraOffset = new THREE.Vector3(0.0, 0.5, 3  ); // NOTE Constant offset between the camera and the target
+
+// NOTE Assuming the camera is direct child of the Scene
+const objectPosition = new THREE.Vector3();
+if(lupa) lupa.getWorldPosition(objectPosition);
+
+camera.position.copy(objectPosition).add(cameraOffset);
+
   //Update window
   if (resizeRendererToDisplaySize(renderer)) {
       var canvas = renderer.domElement;
@@ -203,14 +214,22 @@ window.addEventListener('mousemove', (event) =>
       camera.updateProjectionMatrix();
     }
 
-    // Update camera
+    if(lupa) lupa.position.x = Math.sin(cursor.x * Math.PI/2) * 3
+    //if(lupa) lupa.position.z = Math.cos(cursor.x * Math.PI/2) * 3
+    if(lupa) lupa.position.y = cursor.y * 5
+
+    if(busto) busto.rotation.y = cursor2.x * 2
+
+    /* // Update camera
     camera.position.x = Math.sin(cursor.x * Math.PI/2) * 3
     camera.position.z = Math.cos(cursor.x * Math.PI/2) * 3
     camera.position.y = cursor.y * 4
-    camera.lookAt(cube.position)
+    camera.lookAt(cube.position) */
+
+    //if(busto) busto.rotation.x += 0.001;
 
      // Update controls
-     controls.update()
+     //controls.update()
 
     // Render
     renderer.render(scene, camera)
@@ -227,6 +246,20 @@ tick()
     </script> 
 </head>
 <body>
+  <div class="info">
+    <div class="message"><h3>Lupa</h3><br>Pode interagir tocando e arrastando a tela</div>
+    <br />
+    <button class="ok" onclick="this.parentElement.style.display='none';">OK</button>
+</div>
+
+
+<div class="topnav">
+  <a href="https://carlostrancoso.github.io/Busto/">Anterior</a>
+  <div class="topnav-right">
+    <a href="https://carlostrancoso.github.io/Nuvem/">Próximo</a>
+  </div>
+
+</div>
     <canvas id="webgl"></canvas>
 </body>
 </html>
