@@ -1,31 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa</title>
-    <link type="text/css" rel="stylesheet" href="./main.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANN</title>
+  <link type="text/css" rel="stylesheet" href="./main.css">
+  <script  type="importmap">{
+    "imports": {
+      "three": "https://threejs.org/build/three.module.js"
+    }
+  }</script><!-- Remove this when import maps will be widely supported -->
+  <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+  <script type="module">
+    
+   //bibliotecas
+   import * as THREE from 'three';
+   import {OrbitControls} from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
+   import {OBJLoader} from 'https://threejs.org/examples/jsm/loaders/OBJLoader.js';
+   import {MTLLoader} from 'https://threejs.org/examples/jsm/loaders/MTLLoader.js';
+   import { GLTFLoader } from 'https://threejs.org/examples/jsm/loaders/GLTFLoader.js';
 
-    <script  type="importmap">{
-      "imports": {
-        "three": "https://threejs.org/build/three.module.js"
-      }
-    }</script><!-- Remove this when import maps will be widely supported -->
-    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-    <script type="module">
+  //loading screen
 
-     //bibliotecas
-     import * as THREE from 'three';
-     import {OrbitControls} from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
-     import {OBJLoader} from 'https://threejs.org/examples/jsm/loaders/OBJLoader.js';
-     import {MTLLoader} from 'https://threejs.org/examples/jsm/loaders/MTLLoader.js';
-
-
-//loading screen
-
-const manager = new THREE.LoadingManager();
+  const manager = new THREE.LoadingManager();
   const loadingContainer = document.querySelector('.loading-screen')
+  
+  manager.onLoad = function ( ) {
 
+  loadingContainer.style.display='none';
+  
+
+};
 
 manager.onError = function ( url ) {
 
@@ -33,88 +39,85 @@ manager.onError = function ( url ) {
 
 };
 
+  //janela e motor render
+  var canvas = document.querySelector('#c');
+  var renderer = new THREE.WebGLRenderer({canvas, alpha:true});
+  renderer.setClearColor( 0xEDEDED, 0 );
+    
+  //camera
+  var fov = 25;
+  var aspect = 2;  // the canvas default
+  var near = 1;
+  var far = 50;
+  var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.set(0, 10, 20);
 
 
-      //janela e motor render
-      var canvas = document.querySelector('#webgl');
-      var renderer = new THREE.WebGLRenderer({canvas, alpha:true});
-      renderer.setClearColor( 0xEDEDED, 0 );
-
-      //cena e fundo 
-      //const bgcolor = new THREE.Color(0xEDEDED);
-      const bgcolor = new THREE.Color('black');
-      const scene = new THREE.Scene();
-      scene.background = bgcolor;
-
-    // Camera
-    const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 100)
-    scene.add(camera)
-
-    // Controls
-    //const controls = new OrbitControls(camera, canvas)
-    //controls.enableDamping = true
-    //controls.enabled = true
-
-    //redimensionamento da janela
-
-  function resizeRendererToDisplaySize(renderer) {
-    var canvas = renderer.domElement;
-    var width = canvas.clientWidth;
-    var height = canvas.clientHeight;
-    var needResize = canvas.width !== width || canvas.height !== height;
-    if (needResize) {
-      renderer.setSize(width, height, false);
-    }
-    return needResize;
-  }
+    
+  //controlo orbita
+  var controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;  
+  controls.target.set(0, 1, 0);
+  controls.enableZoom = true;
+  controls.enablePan = true;
+  controls.maxPolarAngle = 3*Math.PI/4;
+  controls.minPolarAngle = Math.PI/4;
+  controls.minDistance = 10;
+  controls.maxDistance = far;
+    
+  //cena e fundo 
+  //const bgcolor = new THREE.Color(0xEDEDED);
+  const bgcolor = new THREE.Color(0x000000);
+  const scene = new THREE.Scene();
+  scene.background = bgcolor;
 
   //luz ambiente
 
-  const light = new THREE.AmbientLight( 0xffffff, 2 ); // soft white light
+  const light = new THREE.AmbientLight( 0xffffff, 1 ); // soft white light
   scene.add( light );
 
+  
+
+    
   //luz vermelha
   {
-    var color = 0xE7071B;
-    var intensity = 4;
-    var rlight = new THREE.DirectionalLight(color, intensity);
-    rlight.position.set(5, 50, 10);
-    scene.add(rlight);
-    scene.add(rlight.target);
+    var color = 0xFF0000;
+    var intensity = 3;
+    var lightR = new THREE.DirectionalLight(color, intensity);
+    lightR.position.set(5, 10, 10);
+    scene.add(lightR);
+    scene.add(lightR.target);
   }
+
    
     //luz azul
   {
     var color = 0x0000FF;
-    var intensity = 3; 
-    var blight = new THREE.DirectionalLight(color, intensity);
-    blight.position.set(10, 12, 2);
-    scene.add(blight);
-    scene.add(blight.target);
+    var intensity = 5; 
+    var lightB = new THREE.DirectionalLight(color, intensity);
+    lightB.position.set(2, -5, 2);
+    scene.add(lightB);
+    scene.add(lightB.target);
   }
+
    
     //luz verde
     
   {
     var color = 0x00FF00;
-    var intensity = 2;
-    var glight = new THREE.DirectionalLight(color, intensity);
-    glight.position.set(-10, 5, 2);
-    scene.add(glight);
-    scene.add(glight.target);
+    var intensity = 3;
+    var lightG = new THREE.DirectionalLight(color, intensity);
+    lightG.position.set(-10, 12, 2);
+    scene.add(lightG);
+    scene.add(lightG.target);
   }
-
-
-  // Object
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1, 5, 5, 5),
-    new THREE.MeshBasicMaterial({ color: 0xff0000 })
-)
-scene.add(cube)
-cube.visible = false
+  
+ 
 
   //lupa
-var lupa;
+
+	  var lupa;
   {
     var objLoader = new OBJLoader(manager);
     var mat = new THREE.MeshPhysicalMaterial({});
@@ -139,115 +142,216 @@ objLoader.load('LUPA.obj', function (obj) {
         });
         lupa = obj;
         scene.add(lupa);
-      lupa.rotation.x = Math.PI;
-      lupa.rotation.z = Math.PI;
+      lupa.rotation.y = Math.PI;
+      
     });
     }
 
     //bustos
 
-    var busto;
-    const oldObjectPosition = new THREE.Vector3();
-  {
-    var mtlLoader = new MTLLoader(manager);
-    mtlLoader.load('BUSTO_2.mtl', (mtl) => {
-      mtl.preload();
-      for (var material of Object.values(mtl.materials)) {
-     material.side = THREE.DoubleSide;
-      }
-      var objLoader = new OBJLoader(manager);
-      objLoader.setMaterials(mtl);
-      objLoader.load('BUSTO_2.obj', (mesh) => {
-        busto = mesh;
-        scene.add(busto);
-        busto.rotation.x = Math.PI;
-        busto.rotation.z = Math.PI;
-        busto.visible = true;
-        
-        lupa.getWorldPosition(oldObjectPosition);
-      });
-    });
+    const loader = new GLTFLoader();
 
+  var busto;
+
+						loader.load( './BUSTO.gltf', function ( gltf ) {
+              busto = gltf.scene;
+              busto.visible = true;
+              busto.rotation.y= Math.PI;
+							scene.add( busto );
+
+              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+
+              render();
+
+} );
+
+var busto2;
+
+						loader.load( './BUSTO_2.gltf', function ( gltf ) {
+              busto2 = gltf.scene;
+							scene.add( busto2 );
+              busto2.visible = false;
+
+              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+
+              render();
+
+} );
+
+var busto3;
+
+						loader.load( './BUSTO_3.gltf', function ( gltf ) {
+              busto3 = gltf.scene;
+							scene.add( busto3 );
+              busto3.visible = false;
+
+              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+
+              render();
+
+} );
+
+var busto4;
+
+						loader.load( './BUSTO_4.gltf', function ( gltf ) {
+              busto4 = gltf.scene;
+							scene.add( busto4 );
+              busto4.visible = false;
+
+              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+
+              render();
+
+} );
+
+var busto5;
+
+						loader.load( './BUSTO_5.gltf', function ( gltf ) {
+              busto5 = gltf.scene;
+							scene.add( busto5 );
+              busto5.visible = false;
+              busto5.rotation.y = Math.PI;
+
+              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+
+              render();
+
+} );
+
+
+  //Rotatividade dos modelos
+
+  var state = 0;
+
+  var rotatividade = function (event) {
+    state++;
+
+    if (state == 1) {
+
+    //gustavo
+    busto.visible = false;
+    busto2.visible = true;
+    busto3.visible = false;
+    busto4.visible = false;
+    busto5.visible = false;
+
+  } else if (state == 2) {
+    //gemeas
+    busto.visible = false;
+    busto2.visible = false;
+    busto3.visible = true;
+    busto4.visible = false;
+    busto5.visible = false;
+
+  } else if (state == 3) {
+    //matias
+    busto.visible = false;
+    busto2.visible = false;
+    busto3.visible = false;
+    busto4.visible = true;
+    busto5.visible = false;
+
+  } else if (state == 4) {
+    //madrinha
+    busto.visible = false;
+    busto2.visible = false;
+    busto3.visible = false;
+    busto4.visible = false;
+    busto5.visible = true;
+
+  } else if (state >= 5) {
+    state = 0;
+    //lucas
+    busto.visible = true;
+    busto2.visible = false;
+    busto3.visible = false;
+    busto4.visible = false; 
+    busto5.visible = false;
+  }
+};
+
+// formas de interacao
+
+document.querySelector('#c').addEventListener('dblclick', rotatividade, false);
+
+
+//redimensionamento da janela
+
+  function resizeRendererToDisplaySize(renderer) {
+    var canvas = renderer.domElement;
+    var width = canvas.clientWidth;
+    var height = canvas.clientHeight;
+    var needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+      renderer.setSize(width, height, false);
+    }
+    return needResize;
   }
 
-  // Cursor
-const cursor = {
-    x: 0,
-    y: 0
+  const clock = new THREE.Clock()
+
+
+
+  //funcao de animacao
+ function animate() {
+
+  const elapsedTime = clock.getElapsedTime()%22
+
+  if (elapsedTime >= 10 && elapsedTime <= 11) {
+    
+  if(lupa) lupa.rotation.y -= Math.random()*0.05;
+
+} else if (elapsedTime >= 15 && elapsedTime <= 16) {
+
+  if(lupa) lupa.rotation.y += Math.random()*0.1;
+
+} else if (elapsedTime >= 17 && elapsedTime <= 18) {
+
+if(lupa) lupa.rotation.y -= Math.random()*0.1;
+
+} else if (elapsedTime >= 19 && elapsedTime <= 20) {
+
+if(lupa) lupa.rotation.y -= Math.random()*0.1;
+
+} else if (elapsedTime >= 21) {
+
+if(lupa) lupa.rotation.y += Math.random()*0.1;
+
 }
 
-const cursor2 = {
-    x: 0,
-    y: 0
-}
-window.addEventListener('mousemove', (event) =>
-{
-    cursor.x = event.clientX / canvas.clientWidth - 0.5
-    cursor.y = - (event.clientY / canvas.clientHeight - 0.5)
 
-})
+   if(busto) busto.rotation.y -= 0.002;    
+   if(busto2) busto2.rotation.y -= 0.002;   
+   if(busto3) busto3.rotation.y += 0.002;   
+   if(busto4) busto4.rotation.y -= 0.002;  
+   if(busto5) busto5.rotation.y -= 0.002;
 
-window.addEventListener('click', (event) =>
-{
-    cursor2.x = event.clientX / canvas.clientWidth - 0.5
-    cursor2.y = - (event.clientY / canvas.clientHeight - 0.5)
+    renderer.render(scene, camera);
 
-})
-
-
-
-    const tick = () =>
-{
-
-  const cameraOffset = new THREE.Vector3(0.0, 0.5, 3  ); // NOTE Constant offset between the camera and the target
-
-// NOTE Assuming the camera is direct child of the Scene
-const objectPosition = new THREE.Vector3();
-if(lupa) lupa.getWorldPosition(objectPosition);
-
-camera.position.copy(objectPosition).add(cameraOffset);
-
-  //Update window
-  if (resizeRendererToDisplaySize(renderer)) {
+    if (resizeRendererToDisplaySize(renderer)) {
       var canvas = renderer.domElement;
       camera.aspect = canvas.clientWidth / canvas.clientHeight;
       camera.updateProjectionMatrix();
     }
+    controls.update();
 
-    if(lupa) lupa.position.x = Math.sin(cursor.x * Math.PI/2) * 3
-    //if(lupa) lupa.position.z = Math.cos(cursor.x * Math.PI/2) * 3
-    if(lupa) lupa.position.y = cursor.y * 5
+    
+    console.log(elapsedTime);
 
-    if(busto) busto.rotation.y = cursor2.x * 2
+    requestAnimationFrame(animate);
+    
+};
 
-    /* // Update camera
-    camera.position.x = Math.sin(cursor.x * Math.PI/2) * 3
-    camera.position.z = Math.cos(cursor.x * Math.PI/2) * 3
-    camera.position.y = cursor.y * 4
-    camera.lookAt(cube.position) */
-
-    //if(busto) busto.rotation.x += 0.001;
-
-     // Update controls
-     //controls.update()
-
-    // Render
-    renderer.render(scene, camera)
+animate();
 
 
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
-}
-
-tick()
-
-
-
-    </script> 
+    </script>
 </head>
+
 <body>
+
   <div class="info">
-    <div class="message"><h3>Lupa</h3><br>Micro-site em manutenção</div>
+    <div class="message"><h3>ANN</h3><br>Interaja tocando, arrastando e aumentando. Faça duplo clique para mudar o modelo.</div>
     <br />
     <button class="ok" onclick="this.parentElement.style.display='none';">OK</button>
 </div>
@@ -260,6 +364,11 @@ tick()
   </div>
 
 </div>
-    <canvas id="webgl"></canvas>
+
+  <canvas id="c"></canvas>
+  <div class="loading-screen">
+    <label for="loading-screen">A carregar...</label>
+  </div>
 </body>
+
 </html>
