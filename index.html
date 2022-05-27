@@ -273,7 +273,19 @@ var busto5;
 // formas de interacao
 
 document.querySelector('#c').addEventListener('dblclick', rotatividade, false);
+document.querySelector('#c').addEventListener("touchstart", tapHandler);
 
+var tapedTwice = false;
+
+function tapHandler(event) {
+    if(!tapedTwice) {
+        tapedTwice = true;
+        setTimeout( function() { tapedTwice = false; }, 300 );
+        return false;
+    }
+    event.preventDefault();
+    rotatividade();
+ }
 
 //redimensionamento da janela
 
@@ -351,14 +363,14 @@ animate();
 <body>
 
   <div class="info">
-    <div class="message"><h3>ANN</h3><br>Interaja tocando, arrastando e aumentando. Faça duplo clique para mudar o modelo.</div>
+    <div class="message"><h3>ANN</h3><br>Interaja tocando, arrastando e aumentando. Faça duplo clique para mudar.</div>
     <br />
     <button class="ok" onclick="this.parentElement.style.display='none';">OK</button>
 </div>
 
 
 <div class="topnav">
-  <a href="https://carlostrancoso.github.io/Busto/">Anterior</a>
+  <a href="https://carlostrancoso.github.io/Persona/">Anterior</a>
   <div class="topnav-right">
     <a href="https://carlostrancoso.github.io/Nuvem/">Próximo</a>
   </div>
