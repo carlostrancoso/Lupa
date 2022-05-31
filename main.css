@@ -30,7 +30,12 @@ html, body
 cursor: grabbing;
 }
 /* Info inicial */
-
+h2
+    {
+      font-size: 19px;
+      text-align: center;
+	  line-height: 5px;
+  }
 h3
     {
       font-size: 40px;
@@ -106,6 +111,18 @@ h3
 
     }
 
+    #sobreMsg a
+{
+        text-decoration: none;
+		color: #ffffff;
+
+    }
+	#sobreMsg a:hover
+{
+        text-decoration: none;
+		color: yellow;
+
+    }
     
 
 
@@ -124,6 +141,22 @@ h3
 {
             text-align: left;
             color: #FFFFFF;
+}
+
+@media screen and (min-width: 1400px) {
+  #sobreMsg {
+      padding-left: 40%;
+      padding-right: 40%;
+  font-size: 15px;
+  line-height: 19px;
+  
+  }
+  .info {
+
+  font-size: 14px;
+  line-height: 17px;
+  
+  }
 }
 
 
@@ -194,9 +227,3 @@ color: black;
 font-size: small;
 }
 
-.text-label {
-    color: #fff;
-    font-family: "Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
-    margin: -5px 0 0 15px;
-    pointer-events:none;
-  }
