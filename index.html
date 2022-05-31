@@ -159,9 +159,9 @@ objLoader.load('LUPA.obj', function (obj) {
               busto.rotation.y= Math.PI;
 							scene.add( busto );
 
-              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+              //objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
 
-              render();
+             // render();
 
 } );
 
@@ -172,9 +172,9 @@ var busto2;
 							scene.add( busto2 );
               busto2.visible = false;
 
-              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+              //objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
 
-              render();
+             // render();
 
 } );
 
@@ -185,9 +185,9 @@ var busto3;
 							scene.add( busto3 );
               busto3.visible = false;
 
-              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+              //objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
 
-              render();
+              //render();
 
 } );
 
@@ -198,9 +198,9 @@ var busto4;
 							scene.add( busto4 );
               busto4.visible = false;
 
-              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+              //objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
 
-              render();
+             // render();
 
 } );
 
@@ -212,9 +212,9 @@ var busto5;
               busto5.visible = false;
               busto5.rotation.y = Math.PI;
 
-              objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
+              //objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) )
 
-              render();
+              //render();
 
 } );
 
@@ -357,20 +357,40 @@ if(lupa) lupa.rotation.y += Math.random()*0.1;
 animate();
 
 
+
+
     </script>
 </head>
 
 <body>
 
+  <!-- Info inicial -->
   <div class="info">
-    <div class="message"><h3>ANN</h3><br>Interaja tocando, arrastando e aumentando. Faça duplo clique para mudar.</div>
+    <div class="message"><h3>ANN</h3><br>Interaja tocando, arrastando e aumentando.<br><br>Faça duplo clique para mudar.<br><br>Use os botões ‘Anterior’ e ‘Próximo’ para mudar de site.</div>
     <br />
     <button class="ok" onclick="this.parentElement.style.display='none';">OK</button>
 </div>
 
+<!-- Sobre -->
+<div class="sobre" id="sobreMsg">
+  <div class="message"><h3>Persona</h3><br>‘Persona’ faz parte do projeto experimental ‘Rise of trivial’. O termo ‘Persona’ é usado no marketing digital para descrever uma personagem fictícia que representa um cliente ideal. É também, na conceção da filosofia clássica, um arquétipo, ou seja, uma ideia como modelo originário de algo existente. Estes retratos (na forma de bustos tridimensionais) representam uma conceção platónica da web: embora não a vejamos, aceitamos a sua existência. Assim, no decurso dos nossos dias e das nossas rotinas, existem margens entre mundos que são constantemente redesenhadas e atualizadas. O limite entre a nossa vivência pessoal e o mundo global é um campo de liberdade, mas também um campo de batalha onde os temas basilares da sociedade se misturam com os nossos medos e desejos pessoais.
+    Esta exposição situa-se no limite entre o físico e o virtual, entre o racional e o sensorial, entre o humano e o não-humano. É uma experiência que nos coloca nesse espaço estranho mas ao mesmo tempo familiar: a margem.</div>
+  <br />
+  <button class="ok" onclick="this.parentElement.style.visibility = 'hidden';">Fechar</button>
+</div>
 
+<!-- Top navigation -->
 <div class="topnav">
+
+  <!-- Centered link -->
+  <div class="topnav-centered" onclick="document.getElementById('sobreMsg').style.visibility = 'visible'">
+    <a>Sobre</a>
+  </div>
+
+  <!-- Left-aligned links (default) -->
   <a href="https://carlostrancoso.github.io/Persona/">Anterior</a>
+
+  <!-- Right-aligned links -->
   <div class="topnav-right">
     <a href="https://carlostrancoso.github.io/Nuvem/">Próximo</a>
   </div>
